@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -114,9 +114,7 @@ vim.opt.showmode = false
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
-end)
+-- vim.opt.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.opt.breakindent = true
@@ -146,7 +144,7 @@ vim.opt.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = '→ ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -159,6 +157,7 @@ vim.opt.scrolloff = 10
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
+vim.keymap.set('n', ';', ':')
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
@@ -185,10 +184,10 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 --  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+-- vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+-- vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+-- vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+-- vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -403,7 +402,7 @@ require('lazy').setup({
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>f', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -529,7 +528,7 @@ require('lazy').setup({
 
           -- Fuzzy find all the symbols in your current document.
           --  Symbols are things like variables, functions, types, etc.
-          map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+          map('<leader>s', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
 
           -- Fuzzy find all the symbols in your current workspace.
           --  Similar to document symbols, except searches over your entire project.
@@ -537,11 +536,15 @@ require('lazy').setup({
 
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
-          map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+          map('<leader>r', vim.lsp.buf.rename, '[R]e[n]ame')
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
-          map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
+          map('<leader>a', vim.lsp.buf.code_action, '[C]ode [A]ction')
+
+          -- Opens a popup that displays documentation about the word under your cursor
+          --  See `:help K` for why this keymap.
+          map('K', vim.lsp.buf.hover, 'Hover Documentation')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
@@ -671,7 +674,7 @@ require('lazy').setup({
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>f',
+        '<leader>sf',
         function()
           require('conform').format { async = true, lsp_format = 'fallback' }
         end,
@@ -779,7 +782,7 @@ require('lazy').setup({
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
-          --['<CR>'] = cmp.mapping.confirm { select = true },
+          -- ['<Space>'] = cmp.mapping.confirm { select = true },
           --['<Tab>'] = cmp.mapping.select_next_item(),
           --['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
@@ -829,22 +832,58 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
+    'nyoom-engineering/oxocarbon.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'oxocarbon'
 
       -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
+      -- vim.cmd.hi 'Comment gui=none'
     end,
   },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
-
+  {
+    'folke/trouble.nvim',
+    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    cmd = 'Trouble',
+    keys = {
+      {
+        '<leader>xx',
+        '<cmd>Trouble diagnostics toggle<cr>',
+        desc = 'Diagnostics (Trouble)',
+      },
+      {
+        '<leader>xX',
+        '<cmd>Trouble diagnostics toggle filter.buf=0<cr>',
+        desc = 'Buffer Diagnostics (Trouble)',
+      },
+      {
+        '<leader>cs',
+        '<cmd>Trouble symbols toggle focus=false<cr>',
+        desc = 'Symbols (Trouble)',
+      },
+      {
+        '<leader>cl',
+        '<cmd>Trouble lsp toggle focus=false win.position=right<cr>',
+        desc = 'LSP Definitions / references / ... (Trouble)',
+      },
+      {
+        '<leader>xL',
+        '<cmd>Trouble loclist toggle<cr>',
+        desc = 'Location List (Trouble)',
+      },
+      {
+        '<leader>xQ',
+        '<cmd>Trouble qflist toggle<cr>',
+        desc = 'Quickfix List (Trouble)',
+      },
+    },
+  },
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
     config = function()
@@ -882,6 +921,35 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
+  {
+    'vhyrro/luarocks.nvim',
+    priority = 1000,
+    config = true,
+  },
+  {
+    'nvim-neorg/neorg',
+    dependencies = { 'luarocks.nvim' },
+    lazy = false, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
+    version = '*', -- Pin Neorg to the latest stable release
+    config = function()
+      require('neorg').setup {
+        load = {
+          ['core.defaults'] = {},
+          ['core.keybinds'] = {},
+          ['core.completion'] = { config = { engine = 'nvim-cmp' } },
+          ['core.concealer'] = { config = { icon_preset = 'basic' } },
+          ['core.dirman'] = {
+            config = {
+              workspaces = {
+                notes = '~/notes',
+              },
+              default_workspace = 'notes',
+            },
+          },
+        },
+      }
+    end,
+  },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
@@ -897,6 +965,15 @@ require('lazy').setup({
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = '<C-space>',
+            node_incremental = '<C-space>',
+            scope_incremental = false,
+            node_decremental = '<bs>',
+          },
+        },
       },
       indent = { enable = true, disable = { 'ruby' } },
     },
@@ -906,6 +983,22 @@ require('lazy').setup({
     --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    config = function(_, opts)
+      -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
+
+      -- Prefer git instead of curl in order to improve connectivity in some environments
+      require('nvim-treesitter.install').prefer_git = true
+      -- require('nvim-treesitter.install').compilers = { 'gcc-13' }
+      ---@diagnostic disable-next-line: missing-fields
+      require('nvim-treesitter.configs').setup(opts)
+
+      -- There are additional nvim-treesitter modules that you can use to interact
+      -- with nvim-treesitter. You should go explore a few and see what interests you:
+      --
+      --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
+      --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
+      --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    end,
   },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
@@ -920,7 +1013,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
